@@ -18,6 +18,7 @@
 void FCGI_init(Fcgi_t *c) {
     c->sockfd = 0;
     c->requestId = 0;
+	c->flag = 0;
 }
 
 void FCGI_close(Fcgi_t *c) {
@@ -203,7 +204,27 @@ int sendEndRequestRecord(Fcgi_t *c) {
     return rc;
 }
 
-void renderContent(Fcgi_t *c, char **content) {
+void explode(char *str, char *delim, Fcgi_res_head *head[]) {
+	char *token = strtok(str, delim);
+	int i = 0;
+	while (token != NULL) {
+		//printf("token=%s\n", token);
+		char *p = strstr(token, ": ");
+		if (p != NULL) {
+			Fcgi_res_head *subhead = (Fcgi_res_head *)malloc(sizeof(Fcgi_res_head));
+			memset(subhead, 0, sizeof(subhead));
+			subhead->value = strdup(p+2);
+			*p = '\0';
+			subhead->name = strdup(token);
+			//printf("name=%s, value=%s, i=%d\n", subhead->name, subhead->value, i);
+			head[i] = subhead;
+			i++;
+		}
+		token = strtok(NULL, delim);
+	}
+}
+
+void renderContent(Fcgi_t *c, Fcgi_res_head *head[], char **content) {
     FCGI_Header responderHeader;
 	int contentLen, count;
 	char *section = NULL;
@@ -222,8 +243,21 @@ void renderContent(Fcgi_t *c, char **content) {
 				perror("read1");
 			}
 			section[contentLen] = '\0';
-			*content = (char *)realloc(*content, strlen(*content) + contentLen + 1);
-			strcat(*content, section);
+			if (c->flag == 0 && strncmp(section, "X-Powered-By", 12) == 0) {
+				//·Ö½â
+				char *p = strstr(section, "\r\n\r\n");
+				if (strlen(p+4) > 0) {
+					*content = (char *)realloc(*content, strlen(*content) + strlen(p+4) + 1);
+					strcat(*content, p+4);
+				}
+				*p = '\0';
+				//printf("section=%s\n", section);
+				explode(section, "\r\n", head);
+				c->flag = 1;
+			} else {
+				*content = (char *)realloc(*content, strlen(*content) + contentLen + 1);
+				strcat(*content, section);
+			}
 			free(section);
 
 			if (responderHeader.paddingLength > 0) {

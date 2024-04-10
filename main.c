@@ -22,10 +22,16 @@ int get() {
     sendEndRequestRecord(c);
 
 	char *content = malloc(sizeof(char) * 1);
+	//char *head = malloc(sizeof(char) * 1);
+	Fcgi_res_head *head[2];
 	bzero(content, 1);
-    renderContent(c, &content);
-	printf("read from php = %s\n", content);
+	//bzero(head, 1);
+    renderContent(c, head, &content);
+	printf("head1.name=%s, value=%s\n", head[0]->name, head[0]->value);
+    printf("head2.name=%s, value=%s\n", head[1]->name, head[1]->value);
+	printf("read from php, head = %p, content = %s\n", head, content);
 
+	//free(head);
 	free(content);
     FCGI_close(c);
     return 0;
@@ -49,10 +55,16 @@ int post() {
 	sendBody(c, "abcdEFGhijklmnopQrstuvwxyz");
 
     char *content = malloc(sizeof(char) * 1);
+    //char *head = malloc(sizeof(char) * 1);
+	Fcgi_res_head *head[2];
     bzero(content, 1);
-    renderContent(c, &content);
-    printf("read from php = %s\n", content);
+	//bzero(head, 1);
+    renderContent(c, head, &content);
+	printf("head1.name=%s, value=%s\n", head[0]->name, head[0]->value);
+	printf("head2.name=%s, value=%s\n", head[1]->name, head[1]->value);
+    printf("read from php, head = %p, content = %s\n", head, content);
 
+	//free(head);
     free(content);
     FCGI_close(c);
     return 0;

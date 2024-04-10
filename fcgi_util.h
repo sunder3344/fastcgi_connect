@@ -6,7 +6,13 @@
 typedef struct {
     int sockfd;
     int requestId;
+	int flag;
 } Fcgi_t;
+
+typedef struct {
+	char *name;
+	char *value;
+} Fcgi_res_head;
 
 void FCGI_init(Fcgi_t *c);
 
@@ -28,7 +34,7 @@ int sendParams(Fcgi_t *c, char *name, char *value);
 
 int sendEndRequestRecord(Fcgi_t *c);
 
-void renderContent(Fcgi_t *c, char **content);
+void renderContent(Fcgi_t *c,  Fcgi_res_head *head[], char **content);
 
 void sendBody(Fcgi_t *c, char *body);
 
