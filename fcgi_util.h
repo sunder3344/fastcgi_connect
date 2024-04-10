@@ -34,7 +34,9 @@ int sendParams(Fcgi_t *c, char *name, char *value);
 
 int sendEndRequestRecord(Fcgi_t *c);
 
-void renderContent(Fcgi_t *c,  Fcgi_res_head *head[], char **headstr, char **content);
+void explode(char *str, char *delim, Fcgi_res_head *head[]);
+
+void renderContent(Fcgi_t *c, char **headstr, char **content);
 
 void sendBody(Fcgi_t *c, char *body);
 

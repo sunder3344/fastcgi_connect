@@ -224,7 +224,7 @@ void explode(char *str, char *delim, Fcgi_res_head *head[]) {
 	}
 }
 
-void renderContent(Fcgi_t *c, Fcgi_res_head *head[], char **headstr, char **content) {
+void renderContent(Fcgi_t *c, char **headstr, char **content) {
     FCGI_Header responderHeader;
 	int contentLen, count;
 	char *section = NULL;
@@ -254,7 +254,7 @@ void renderContent(Fcgi_t *c, Fcgi_res_head *head[], char **headstr, char **cont
 				//printf("section=%s\n", section);
 				*headstr = (char *)realloc(*headstr, strlen(*headstr) + strlen(section) + 1);
 				strcat(*headstr, section);
-				explode(section, "\r\n", head);
+				//explode(section, "\r\n", head);
 				c->flag = 1;
 			} else {
 				*content = (char *)realloc(*content, strlen(*content) + contentLen + 1);

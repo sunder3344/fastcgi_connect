@@ -26,7 +26,9 @@ int get() {
 	Fcgi_res_head *head[2];
 	bzero(content, 1);
 	bzero(headstr, 1);
-    renderContent(c, head, &headstr, &content);
+    renderContent(c, &headstr, &content);
+	printf("headstr=%s\n", headstr);
+	explode(headstr, "\r\n", head);
 	printf("head1.name=%s, value=%s\n", head[0]->name, head[0]->value);
     printf("head2.name=%s, value=%s\n", head[1]->name, head[1]->value);
 	printf("read from php, head = %s, content = %s\n", headstr, content);
@@ -59,7 +61,9 @@ int post() {
 	Fcgi_res_head *head[2];
     bzero(content, 1);
 	bzero(headstr, 1);
-    renderContent(c, head, &headstr, &content);
+    renderContent(c, &headstr, &content);
+	printf("headstr=%s\n", headstr);
+	explode(headstr, "\r\n", head);
 	printf("head1.name=%s, value=%s\n", head[0]->name, head[0]->value);
 	printf("head2.name=%s, value=%s\n", head[1]->name, head[1]->value);
     printf("read from php, head = %s, content = %s\n", headstr, content);
