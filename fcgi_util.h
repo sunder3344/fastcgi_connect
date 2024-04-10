@@ -34,7 +34,7 @@ int sendParams(Fcgi_t *c, char *name, char *value);
 
 int sendEndRequestRecord(Fcgi_t *c);
 
-void renderContent(Fcgi_t *c,  Fcgi_res_head *head[], char **content);
+void renderContent(Fcgi_t *c,  Fcgi_res_head *head[], char **headstr, char **content);
 
 void sendBody(Fcgi_t *c, char *body);
 
